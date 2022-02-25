@@ -1,8 +1,9 @@
 import time, random
 import xlsxwriter as xl
 INF = 9999999
-how_many = 5000
-paramparampam = 100
+how_many = 50
+how_many2 = 150
+paramparampam = how_many2+1
 
 def prim(n, g):
     pusto = [0] * n
@@ -25,8 +26,8 @@ def prim(n, g):
         #print(str(x) + "->" + str(y) + ": " + str(g[x][y]))
         pusto[y] = 1
 
-def newN():
-    return random.randint(2, paramparampam)
+def newN(n):
+    return n+1#random.randint(2, paramparampam)
 
 def newMas(n):
     #mas = [0] * (n*(n-1)//2)
@@ -40,22 +41,23 @@ def newMas(n):
             return 'zero'
     return g
 
-
+n=1
 middle = [[0 for i in range(paramparampam+1)]for j in range(2)]
 '''file = open('prim.txt', 'w')'''
-for i in range(how_many):
-    g = 'zero'
-    n = newN()
-    while g == 'zero':
-        g = newMas(n)
-    start_time = time.time() #начинаем время
-    time.sleep(0.1)
-    prim(n, g)
-    middle[0][n] += (time.time() - start_time-0.1)
-    middle[1][n] += 1
-    '''file.write(str(n))
-    file.write(' ' + str(time.time() - start_time-0.1) + '\n')'''
-    print("%s секунд" % (time.time() - start_time))
+for i in range(how_many2):
+    n = newN(n)
+    for j in range(how_many):
+        g = 'zero'
+        while g == 'zero':
+            g = newMas(n)
+        start_time = time.perf_counter()  # начинаем время
+        # time.sleep(0.1)
+        prim(n, g)
+        middle[0][n] += (time.perf_counter() - start_time)
+        middle[1][n] += 1
+        '''file.write(str(n))
+        file.write(' ' + str(time.time() - start_time-0.1) + '\n')'''
+        print("%s секунд" % (time.perf_counter() - start_time))
 
 '''file.close()'''
 workbook = xl.Workbook('prim.xlsx')

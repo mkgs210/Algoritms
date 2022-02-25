@@ -1,7 +1,8 @@
 import time, random
 import xlsxwriter as xl
-how_many = 5000
-paramparampam = 100
+how_many = 50
+how_many2 = 150
+paramparampam = how_many2+1
 
 def sorte(d):
     d = list(d.items())
@@ -10,7 +11,7 @@ def sorte(d):
 
 def vid(n, g): #new dict with edge of graph
     d = {}
-    letters = [*'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦШЩЪЫЬЭЮЯ'[:n]]
+    letters = tuple('ÅåÄäÀàÁáÂÇçČčÉéÈèÊêËëĔĕĞğĢģÏïÎîÍíÌìÑñÖöÔôŌōÒòÓóØøŜŝŞşÜüŪūÛûÙùÚúŸÿabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦШЩЪЫЬЭЮЯ'[:n])
     for i in range(n):
         for j in range(n):
             if g[i][j] == 0:
@@ -34,8 +35,8 @@ def reverseDelete(d, n):
     #for i in d:
         #print(i[0][0], ' -> ', i[0][1], ': ', i[1])
 
-def newN():
-    return random.randint(2, paramparampam)
+def newN(n):
+    return n+1#random.randint(2, paramparampam)
 
 def newMas(n):
     #mas = [0] * (n*(n-1)//2)
@@ -48,24 +49,25 @@ def newMas(n):
         if sum((lambda g: [el for el in g])(g[i]))==0:
             return 'zero'
     return g
-
+n=1
 middle = [[0 for i in range(paramparampam+1)]for j in range(3)]
-for i in range(how_many):
-    g = 'zero'
-    n = newN()
-    while g == 'zero':
-        g = newMas(n)
-    g = vid(n, g)
-    start_time = time.time() #начинаем время
-    time.sleep(0.1)
-    g = sorte(g)
-    middle[0][n] += (time.time() - start_time-0.1)
-    start_time = time.time()  # начинаем время
-    time.sleep(0.1)
-    reverseDelete(g, n)
-    middle[1][n] += (time.time() - start_time-0.1)
-    middle[2][n] += 1
-    print("%s секунд" % (time.time() - start_time))
+for i in range(how_many2):
+    n = newN(n)
+    for j in range(how_many):
+        g = 'zero'
+        while g == 'zero':
+            g = newMas(n)
+        g = vid(n, g)
+        start_time = time.perf_counter()  # начинаем время
+        # time.sleep(0.1)
+        g = sorte(g)
+        middle[0][n] += (time.perf_counter() - start_time)
+        start_time = time.perf_counter()  # начинаем время
+        # time.sleep(0.1)
+        reverseDelete(g, n)
+        middle[1][n] += (time.perf_counter() - start_time)
+        middle[2][n] += 1
+        print("%s секунд" % (time.perf_counter() - start_time))
 
 workbook = xl.Workbook('reverseDelete.xlsx')
 worksheet = workbook.add_worksheet()
