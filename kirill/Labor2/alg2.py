@@ -52,23 +52,25 @@ alph = "abcdef"
 for i in x:
 
     pattern = "dadae"
+    sek=0
+    for j in range(100):
+        #rand_string = ''.join(random.choice(alph) for j in range(i - 5))
+        #gen_chisl = random.randint(i//2-1, i - 5)
+        gen_chisl = i - 5
+        #rand_string = rand_string[:gen_chisl] + pattern + rand_string[gen_chisl:]
+        rand_string = ("abcde"*(i//2))[:gen_chisl]+pattern
+        # rand_pattern = ''.join(random.choice(alph) for j in range(5))
 
-    #rand_string = ''.join(random.choice(alph) for j in range(i - 5))
-    #gen_chisl = random.randint(i//2-1, i - 5)
-    gen_chisl = i - 5
-    #rand_string = rand_string[:gen_chisl] + pattern + rand_string[gen_chisl:]
-    rand_string = ("abcde"*(i//2))[:gen_chisl]+pattern
-    # rand_pattern = ''.join(random.choice(alph) for j in range(5))
+        # print(rand_string)
+        # print(len(rand_string))
+        start_time = time.perf_counter()
+        # print(1)
+        prov = kmp(pattern, rand_string)
+        # prov = search("dbaeedadae", pattern)
+        # print(1)
+        sek += time.perf_counter() - start_time
 
-    # print(rand_string)
-    # print(len(rand_string))
-    start_time = time.perf_counter()
-    # print(1)
-    prov = kmp(pattern, rand_string)
-    # prov = search("dbaeedadae", pattern)
-    # print(1)
-    sek = time.perf_counter() - start_time
-
+    sek /= 100
     print(rand_string)
 
     print(prov)
