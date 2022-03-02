@@ -159,9 +159,9 @@ for i in x1:
         prov3 = stringSearch(rand_string, pattern)
         sek3 += time.perf_counter() - start_time
 
-    sek1 /= 1000
-    sek2 /= 1000
-    sek3 /= 1000
+    sek1 /= 10000
+    sek2 /= 10000
+    sek3 /= 10000
 
     # print(rand_string)
     print(i)
