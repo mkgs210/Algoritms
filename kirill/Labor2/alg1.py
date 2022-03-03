@@ -51,41 +51,42 @@ def search(string, t):
                 k += 1  # смещение для сравниваемого символа в строке
 
             if not flBreak:  # если дошли до начала образа, значит, все его символы совпали
-                return print(f"образ найден по индексу {i - k + 1}")
+                return i - k + 1
         else:
             return -1
     else:
         return -1
 
 
-x = [i for i in range(10, 50011, 100)]
+x = [i for i in range(10, 5011, 100)]
 y = []
 
 alph = "abcdef"
 for i in x:
     pattern = "dadae"
+    sek=0
+    for j in range(10000):
+        # rand_string = ''.join(random.choice(alph) for j in range(i - 5))
+        # gen_chisl = random.randint(i//2-1, i - 5)
+        gen_chisl = i - 5
+        # rand_string = rand_string[:gen_chisl] + pattern + rand_string[gen_chisl:]
+        rand_string = ("abcde" * (i // 2))[:gen_chisl] + pattern
+        # rand_pattern = ''.join(random.choice(alph) for j in range(5))
 
-    # rand_string = ''.join(random.choice(alph) for j in range(i - 5))
-    # gen_chisl = random.randint(i//2-1, i - 5)
-    gen_chisl = i - 5
-    # rand_string = rand_string[:gen_chisl] + pattern + rand_string[gen_chisl:]
-    rand_string = ("abcde" * (i // 2))[:gen_chisl] + pattern
-    # rand_pattern = ''.join(random.choice(alph) for j in range(5))
+        # print(rand_string)
+        # print(len(rand_string))
+        start_time = time.perf_counter()
+        # print(1)
+        prov = search(rand_string, pattern)
+        # prov = search("dbaeedadae", pattern)
+        # print(1)
+        sek += time.perf_counter() - start_time
 
-    # print(rand_string)
-    # print(len(rand_string))
-    start_time = time.perf_counter()
-    # print(1)
-    prov = search(rand_string, pattern)
-    # prov = search("dbaeedadae", pattern)
-    # print(1)
-    sek = time.perf_counter() - start_time
-
-    print(i)
+    sek/=1000
     print(rand_string)
 
-    if prov == -1:
-        print(prov)
+
+    print(f"образ найден по индексу {prov}")
     print(sek, "seconds")
     y.append(sek)
     # print(len(y))
