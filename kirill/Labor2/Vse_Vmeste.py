@@ -3,7 +3,7 @@ import random
 import xlsxwriter as xl
 
 
-# Алгоритм Бойера-Мура-Хорспула
+#1 Алгоритм Бойера-Мура-Хорспула
 
 
 def forming_d(t):
@@ -58,7 +58,7 @@ def search(string, t):
         return -1
 
 
-# Алгоритм Кнута — Морриса — Пратта
+#2 Алгоритм Кнута — Морриса — Пратта
 
 def prefix(s):
     P = [0] * len(s)
@@ -100,7 +100,7 @@ def kmp(sub: str, s: str):
     return -1
 
 
-# Прямой пребор (в лоб)
+#3 Прямой пребор (в лоб)
 
 def stringSearch(s, x):
     i = j = 0
