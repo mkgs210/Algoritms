@@ -1,2 +1,5 @@
 ﻿  3.cpp
+C:\Users\Maxim\Desktop\algorithms\maxim\3\3.cpp(89,12): warning C4101: start_time: неиспользованная локальная переменная
+C:\Users\Maxim\Desktop\algorithms\maxim\3\3.cpp(89,24): warning C4101: end_time: неиспользованная локальная переменная
+C:\Users\Maxim\Desktop\algorithms\maxim\3\3.cpp(89,34): warning C4101: search_time: неиспользованная локальная переменная
   3.vcxproj -> C:\Users\Maxim\Desktop\algorithms\maxim\3\Debug\3.exe
