@@ -8,15 +8,15 @@
 
 using namespace std;
 
-const double goldenRatio = (1 + sqrt(5)) / 2; // "Золотое" число
+const long double goldenRatio = (1 + sqrt(5)) / 2; // "Золотое" число
 
-double f(double x) {
+long double f(long double x) {
 	return pow(x, 4)-pow(x, 3)+pow(x, 2)-5*x+3;
 }
 
-double fib(double(*func)(double), double a, double b, double eps) {
-	const double g = (sqrt(5) - 1.0) / 2;
-	double a1, b1;
+long double fib(long double(*func)(long double), long double a, long double b, long double eps) {
+	const long double g = (sqrt(5) - 1.0) / 2;
+	long double a1, b1;
 	int k = 0;
 	a1 = a + (1 - g) * (b - a);
 	b1 = a + g * (b - a);
@@ -29,10 +29,12 @@ double fib(double(*func)(double), double a, double b, double eps) {
 		}
 		if (++k > 1e5) break; //во избежание зацикливания
 	}
+	//cout << k << endl;
 	return (a + b) / 2;
 }
-double gold(double(*func)(double), double a, double b, double accuracy) {
-	double x1, x2; // Точки, делящие текущий отрезок в отношении золотого сечения
+long double gold(long double(*func)(long double), long double a, long double b, long double accuracy) {
+	long double x1, x2; // Точки, делящие текущий отрезок в отношении золотого сечения
+	int k = 0;
 	while (fabs(b - a) > accuracy) {
 		x1 = b - (b - a) / goldenRatio;
 		x2 = a + (b - a) / goldenRatio;
@@ -40,24 +42,40 @@ double gold(double(*func)(double), double a, double b, double accuracy) {
 			a = x1;
 		else
 			b = x2;
+		if (++k > 1e5) break;
 	} // Выполняем, пока не достигнем заданной точности
 	return (a + b) / 2;
 }
+
+long double goldRec(long double(*func)(long double), long double a, long double b, long double accuracy) {
+	// Точки, делящие текущий отрезок в отношении золотого сечения
+	long double	x1 = b - (b - a) / goldenRatio;
+	long double	x2 = a + (b - a) / goldenRatio;
+	if (f(x1) <= f(x2)) // Условие для поиска максимума
+		a = x1;
+	else
+		b = x2;
+	if (fabs(b - a) <= accuracy) {
+		return (a + b) / 2;
+	}
+	else {
+		return goldRec(f, a, b, accuracy);
+	}
+}
+
 int main() {
-	double a = 0.1, b = 1.5;
-	int m = 20000;
+	long double a = -1024, b = 1024;
+	int m = 10000;
 
 	setlocale(LC_ALL, "Rus");
 	ofstream fs;
-	ofstream fs1;
-
 	fs.open("method_Fib.txt", fstream::in | fstream::out | fstream::trunc);
-	fs1.open("method_gold.txt", fstream::in | fstream::out | fstream::trunc);
-	double x;
-	double eps = 2;
-	for (int  n = 0; n<53; n++) {
+	long double x;
+	long double eps = 2048;
+	for (int n = 0; n < 53; n++) {
 		eps = eps / 2;
-		cout << "method_Fib" << endl;
+		cout << n << endl;
+
 		auto begin = chrono::steady_clock::now();
 
 		for (int i = 1; i < m; i++) {
@@ -66,27 +84,56 @@ int main() {
 		}
 
 		auto end = chrono::steady_clock::now();
-		auto elapsed_ms = chrono::duration_cast<chrono::nanoseconds>(end - begin).count()/ m;
+		auto elapsed_ms = chrono::duration_cast<chrono::nanoseconds>(end - begin).count() / m;
 		fs << elapsed_ms << '\n';//	//
-		cout << n << ' ' << endl;
-		cout << "method_gold" << endl;
-		begin = chrono::steady_clock::now();
+		cout << "method_Fib " << x << endl;
+	}
+	fs.close();
+
+	ofstream fs1;
+	fs1.open("method_gold.txt", fstream::in | fstream::out | fstream::trunc);
+	eps = 2048;
+	for (int n = 0; n < 53; n++) {
+		eps = eps / 2;
+		cout << n << endl;
+
+		auto begin = chrono::steady_clock::now();
 
 		for (int i = 1; i < m; i++) {
 			x = gold(f, a, b, eps);
 			//cout << x << endl;
 		}
 
-		end = chrono::steady_clock::now();
-		elapsed_ms = chrono::duration_cast<chrono::nanoseconds>(end - begin).count()/ 10000;
+		auto end = chrono::steady_clock::now();
+		auto elapsed_ms = chrono::duration_cast<chrono::nanoseconds>(end - begin).count() / int(m/1.5);
 		fs1 << elapsed_ms << '\n';//	//
-
-		//cout.precision(7);
-		//cout << n << ' ' << eps <<"\nx=" << fixed << x << ", f(x)=" << f(x) << "\n" <<endl;
-		cout << n << ' ' << endl;
+		cout << "method_Fib " << x << endl;
 	}
-	fs.close();
 	fs1.close();
+
+	ofstream fs1r;
+	fs1r.open("method_goldRec.txt", fstream::in | fstream::out | fstream::trunc);
+	eps = 2048;
+	for (int n = 0; n < 53; n++) {
+		eps = eps / 2;
+		cout << n << endl;
+
+		auto begin = chrono::steady_clock::now();
+
+		for (int i = 1; i < m; i++) {
+			x = goldRec(f, a, b, eps);
+			//cout << x << endl;
+		}
+
+		auto end = chrono::steady_clock::now();
+		auto elapsed_ms = chrono::duration_cast<chrono::nanoseconds>(end - begin).count() / (m/2);
+		fs1r << elapsed_ms << '\n';//	//
+		cout << "method_Fib " << x << endl;
+	}
+		
+	
+	
+	fs1r.close();
 
 	return 0;
 }
